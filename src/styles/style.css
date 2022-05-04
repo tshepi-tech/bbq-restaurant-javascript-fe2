@@ -1,3 +1,6 @@
+@import url("./admin.css");
+@import url("./modal.css");
+
 .App {
   max-width: 960px;
   margin: 0 auto;
@@ -6,11 +9,4 @@
 img {
   max-width: 100%;
   height: auto;
-}
-
-#admin .grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 24px;
-  row-gap: 24px;
 }

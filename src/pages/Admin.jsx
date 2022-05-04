@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 // Project files
 import EmptyText from "components/EmptyTextCategory";
 import ItemCategory from "components/ItemAdminCategory";
+import FormCreateItem from "components/FormCreateItem";
 import { readCollection } from "scripts/fireStore";
 import { useItems } from "state/ItemsContext";
+import { useModal } from "state/ModalContext";
 
 export default function Admin() {
   // Global state
   const { items, setItems } = useItems();
+  const { setModal } = useModal();
 
   // Local state
   const [status, setStatus] = useState(0); // 0: loading, 1: loaded, 2: error
@@ -49,7 +52,9 @@ export default function Admin() {
       <div className="grid">
         {items.length === 0 && <EmptyText />}
         {items.length > 0 && Items}
-        <button>Add new category</button>
+        <button onClick={() => setModal(<FormCreateItem />)}>
+          Add new category
+        </button>
       </div>
     </div>
   );
