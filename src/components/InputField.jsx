@@ -3,7 +3,7 @@ export default function InputField({ setup, state }) {
   const [value, setValue] = state;
 
   return (
-    <label>
+    <label className="input-field">
       {label}
       <input
         type={type}

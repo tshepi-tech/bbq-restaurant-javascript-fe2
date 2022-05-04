@@ -2,8 +2,9 @@
 import { useState } from "react";
 
 // Project files
-import formData from "data/formCreateCategory";
-import { createDocumentWithId } from "scripts/fireStore";
+import form from "data/formCreateCategory";
+import { createDocumentWithId, readDocument } from "scripts/fireStore";
+import textToURL from "scripts/textToURL";
 import { useItems } from "state/ItemsContext";
 import { useModal } from "state/ModalContext";
 import InputField from "./InputField";
@@ -15,7 +16,7 @@ export default function FormCreateItem() {
 
   // Local state
   const [title, setTitle] = useState("Roasted Chicken");
-  const [description, setDescription] = useState("A browny chicken with lemon");
+  const [text, setText] = useState("A browny chicken with lemon");
   const [imageURL, setImageURL] = useState(
     "https://static.toiimg.com/thumb/61589069.cms?width=800&height=600"
   );
@@ -24,35 +25,32 @@ export default function FormCreateItem() {
   async function onSubmit(event) {
     event.preventDefault();
 
-    const newId = titleToURL(title);
-    const newItem = {
-      title: title,
-      description: description,
-      imageURL: imageURL,
-    };
+    // 1. Check if the document exist
+    const id = textToURL(title);
+    const existingDocument = await readDocument("menu", id).catch(onFail);
+    console.log("onSubmit() existingDocument", existingDocument);
 
-    const done = await createDocumentWithId("menu", newId, newItem).catch(
-      onFail
-    );
+    // Safeguard
+    if (existingDocument !== undefined) {
+      alert(`An item with the name ${title} already exist`);
+      return;
+    }
 
-    if (done) onSucess(newItem, newId);
+    // 2. Then upload a document
+    const item = { title: title, text: text, imageURL: imageURL };
+    const done = await createDocumentWithId("menu", id, item).catch(onFail);
+
+    if (done) onSucess(id, item);
   }
 
-  function titleToURL(title) {
-    const lowercase = title.toLowerCase();
-    const trim = lowercase.trim();
-    const replace = trim.replace(" ", "-");
-
-    return replace;
-  }
-
-  function onSucess(newItem, newId) {
-    newItem.id = newId;
-    setItems([...items, newItem]);
+  function onSucess(id, item) {
+    item.id = id;
+    setItems([...items, item]);
     setModal(null);
   }
 
   function onFail(error) {
+    console.log("onFail(), error", error);
     console.error(error);
     alert("Could not create a document, check that the name is not reapeated.");
   }
@@ -60,21 +58,9 @@ export default function FormCreateItem() {
   return (
     <form onSubmit={onSubmit}>
       <h2>Create a new item</h2>
-      <InputField
-        setup={formData.title}
-        value={title}
-        onChange={(event) => setTitle(event.target.value)}
-      />
-      <InputField
-        setup={formData.description}
-        value={description}
-        onChange={(event) => setDescription(event.target.value)}
-      />
-      <InputField
-        setup={formData.imageURL}
-        value={imageURL}
-        onChange={(event) => setImageURL(event.target.value)}
-      />
+      <InputField setup={form.title} state={[title, setTitle]} />
+      <InputField setup={form.text} state={[text, setText]} />
+      <InputField setup={form.imageURL} state={[imageURL, setImageURL]} />
       <button>Submit</button>
     </form>
   );

@@ -5,7 +5,7 @@
     "type": "text",
     "required": true
   },
-  "description": {
+  "text": {
     "label": "Description",
     "placeholder": "Example: Fatty piggies with sauce!",
     "type": "text",

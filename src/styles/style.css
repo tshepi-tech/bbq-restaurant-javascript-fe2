@@ -10,3 +10,8 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+.input-field {
+  display: block;
+  padding: 8px;
+}
