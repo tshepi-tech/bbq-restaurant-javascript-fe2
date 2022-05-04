@@ -28,7 +28,6 @@ export default function FormCreateItem() {
     // 1. Check if the document exist
     const id = textToURL(title);
     const existingDocument = await readDocument("menu", id).catch(onFail);
-    console.log("onSubmit() existingDocument", existingDocument);
 
     // Safeguard
     if (existingDocument !== undefined) {
@@ -50,7 +49,6 @@ export default function FormCreateItem() {
   }
 
   function onFail(error) {
-    console.log("onFail(), error", error);
     console.error(error);
     alert("Could not create a document, check that the name is not reapeated.");
   }
