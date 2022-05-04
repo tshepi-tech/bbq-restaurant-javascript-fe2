@@ -6,8 +6,8 @@ import Modal from "components/Modal";
 import Admin from "pages/Admin";
 import AdminCategory from "pages/AdminCategory";
 import Home from "pages/Home";
-import { ItemsProvider } from "state/ItemsProvider";
-import { ModalProvider } from "state/ModalProvider";
+import { ItemsProvider } from "state/ItemsContext";
+import { ModalProvider } from "state/ModalContext";
 
 export default function App() {
   return (
