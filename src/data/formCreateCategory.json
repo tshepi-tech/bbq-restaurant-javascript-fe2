@@ -1,0 +1,20 @@
+{
+  "title": {
+    "label": "Title",
+    "placeholder": "Example: Pork",
+    "type": "text",
+    "required": true
+  },
+  "description": {
+    "label": "Description",
+    "placeholder": "Example: Fatty piggies with sauce!",
+    "type": "text",
+    "required": true
+  },
+  "imageURL": {
+    "label": "Image URL",
+    "placeholder": "Example: www.google.com/image.png",
+    "type": "text",
+    "required": true
+  }
+}

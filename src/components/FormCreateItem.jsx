@@ -2,9 +2,11 @@
 import { useState } from "react";
 
 // Project files
+import formData from "data/formCreateCategory";
 import { createDocumentWithId } from "scripts/fireStore";
 import { useItems } from "state/ItemsContext";
 import { useModal } from "state/ModalContext";
+import InputField from "./InputField";
 
 export default function FormCreateItem() {
   // Global state
@@ -15,7 +17,7 @@ export default function FormCreateItem() {
   const [title, setTitle] = useState("Roasted Chicken");
   const [description, setDescription] = useState("A browny chicken with lemon");
   const [imageURL, setImageURL] = useState(
-    "https://images.unsplash.com/photo-1606728035253-49e8a23146de?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80 "
+    "https://static.toiimg.com/thumb/61589069.cms?width=800&height=600"
   );
 
   // Methods
@@ -29,13 +31,11 @@ export default function FormCreateItem() {
       imageURL: imageURL,
     };
 
-    const isCompleted = await createDocumentWithId(
-      "menu",
-      newId,
-      newItem
-    ).catch(onFail);
+    const done = await createDocumentWithId("menu", newId, newItem).catch(
+      onFail
+    );
 
-    if (isCompleted) onSucess(newItem, newId);
+    if (done) onSucess(newItem, newId);
   }
 
   function titleToURL(title) {
@@ -60,21 +60,18 @@ export default function FormCreateItem() {
   return (
     <form onSubmit={onSubmit}>
       <h2>Create a new item</h2>
-      <input
-        type="text"
-        placeholder="Title"
+      <InputField
+        setup={formData.title}
         value={title}
         onChange={(event) => setTitle(event.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Description"
+      <InputField
+        setup={formData.description}
         value={description}
         onChange={(event) => setDescription(event.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Paste image URL"
+      <InputField
+        setup={formData.imageURL}
         value={imageURL}
         onChange={(event) => setImageURL(event.target.value)}
       />
