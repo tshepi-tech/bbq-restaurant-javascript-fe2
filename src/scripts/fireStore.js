@@ -31,12 +31,12 @@ export async function readDocument(path, id) {
 
 export async function readCollection(path) {
   const collectionPath = collection(fireStore, path);
-  const snapshot = await getDocs(collectionPath);
-  const documents = snapshot.docs.map((item) => {
+  const rawDocuments = await getDocs(collectionPath);
+  const parsedDocuments = rawDocuments.docs.map((item) => {
     return { id: item.id, ...item.data() };
   });
 
-  return documents;
+  return parsedDocuments;
 }
 
 // -- Update

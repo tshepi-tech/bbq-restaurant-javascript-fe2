@@ -1,35 +1,53 @@
-// Project file
+// NPM packages
+import { useEffect, useState } from "react";
+
+// Project files
+import EmptyText from "components/EmptyTextCategory";
+import ItemCategory from "components/ItemAdminCategory";
+import { readCollection } from "scripts/fireStore";
 import { useItems } from "state/ItemsContext";
 
 export default function Admin() {
+  // Global state
   const { items, setItems } = useItems();
 
-  /**
-   * Tomorrow:
-   * 0. Refactor the Context API names. ✅
-   * 1. Connect to a Firebase project
-   * 2. Copy the firebase scripts folder (the new ones witouth try/catch)
-   * 3. Load data from the database using the useEffect hook (by default it will be empty)
-   * 4. Create the AdminCategoryItem.jsx
-   * 5. Call the createForm using the portal
-   * 6. Call the editForm and deleteForm from the AdminCategoryItem
-   */
+  // Local state
+  const [status, setStatus] = useState(0); // 0: loading, 1: loaded, 2: error
 
+  // Methods
+  useEffect(() => {
+    async function loadData() {
+      const data = await readCollection("menu").catch(onFail);
+
+      if (data) onSuccess(data);
+    }
+    loadData();
+  }, []);
+
+  function onSuccess(data) {
+    setItems(data);
+    setStatus(1);
+  }
+
+  function onFail(error) {
+    console.error(error);
+    alert("We cannot load the categories. Try again");
+    setStatus(2);
+  }
 
   // Components
-  const EmptyMessage = (
-    <article>
-      You don’t have any category yet. Press add new category to start
-    </article>
-  );
-  const Items = items.map((item, index) => <article key={index}>foo</article>);
+  const Items = items.map((item) => <ItemCategory key={item.id} item={item} />);
+
+  // Safeguards
+  if (status === 0) return <p>Loading ⏱</p>;
+  if (status === 2) return <p>Error ❌</p>;
 
   return (
     <div id="admin">
       <h1>BBQ Admin interface</h1>
       <h2>Here are the current categories</h2>
       <div className="grid">
-        {items.length === 0 && EmptyMessage}
+        {items.length === 0 && <EmptyText />}
         {items.length > 0 && Items}
         <button>Add new category</button>
       </div>

@@ -8,6 +8,7 @@ import AdminCategory from "pages/AdminCategory";
 import Home from "pages/Home";
 import { ItemsProvider } from "state/ItemsContext";
 import { ModalProvider } from "state/ModalContext";
+import "styles/style.css";
 
 export default function App() {
   return (
